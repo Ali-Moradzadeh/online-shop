@@ -38,13 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
     #internal apps
     app_config('products'),
 
     #third apps
     'rest_framework',
-    'products',
     'django_otp',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_hotp',
@@ -59,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -87,8 +87,24 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'online_shop',
+        'USER': 'u0_a566',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'PERMISSIONS': 'GRANT'
+    }
+}
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
@@ -111,6 +127,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+OTP_TOTP_ISSUER = 'online-shop'
+OTP_TOTP_THIRTY_TWO_FACTOR_ISSUER = 'online-shop'
+OTP_TOTP_TIME_STEP = 120
+OTP_TOTP_TIMEOUT = 600
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
